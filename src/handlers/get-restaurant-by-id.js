@@ -1,9 +1,3 @@
-// Create clients and set shared const values outside of the handler.
-
-// Get the DynamoDB table name from environment variables
-const tableName = process.env.SAMPLE_TABLE;
-
-// Create a DocumentClient that represents the query to add an item
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
 
@@ -20,13 +14,11 @@ exports.getByIdHandler = async (event) => {
   // Get id from pathParameters from APIGateway because of `/{id}` at template.yaml
   const id = event.pathParameters.id;
  
-  // Get the item from the table
-  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property
   let response = {};
 
   try {
     const params = {
-      TableName : tableName,
+      TableName : process.env.TABLE_NAME,
       Key: { id: id },
     };
     const data = await docClient.get(params).promise();
